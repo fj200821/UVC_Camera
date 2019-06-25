@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ARCameraDemo</string>
+    <string name="title_activity_face_register">FaceRegisterActivity</string>
+    <string name="register_face_from_camera">Register face from camera</string>
+    <string name="register_face_from_picture">Register face from picture</string>
+    <string name="delete_all_data">Delete all data</string>
+    <string name="app_version">1.0.5-20190621-oriontest1</string>
+
+    <string-array name="facematch_mode">
+        <item>连续对比</item>
+        <item>根据FaceID对比</item>
+    </string-array>
+</resources>
