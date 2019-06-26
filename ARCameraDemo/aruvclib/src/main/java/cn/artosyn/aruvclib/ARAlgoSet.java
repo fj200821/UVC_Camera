@@ -15,6 +15,7 @@ import cn.artosyn.aruvclib.model.ARFaceResult;
 public class ARAlgoSet {
     private WeakReference<Context> contextWeakRef = null;
     private ARTransSet arTransSet;
+    private static final Object algoLock = new Object();
     public ARAlgoSet(Context c, String dbPath) {
         contextWeakRef = new WeakReference<>(c);
         arTransSet = new ARTransSet(c,dbPath);
@@ -30,7 +31,10 @@ public class ARAlgoSet {
     }
 
     public ARFaceResult registByBitmap(Bitmap bitmap){
-        FaceResult faceResult = arTransSet.registByBitmap(bitmap);
+        FaceResult faceResult;
+        synchronized (algoLock) {
+            faceResult = arTransSet.registByBitmap(bitmap);
+        }
         return new ARFaceResult(faceResult);
     }
 
@@ -43,6 +47,10 @@ public class ARAlgoSet {
     }
 
     public Boolean detectLiveness(Bitmap bitmap,Rect rect){
-        return arTransSet.detectLiveness(bitmap,rect);
+        Boolean bresult = null;
+        synchronized (algoLock) {
+            bresult = arTransSet.detectLiveness(bitmap,rect);
+        }
+        return bresult;
     }
 }
