@@ -51,7 +51,7 @@ public class DemoConfig implements Serializable {
 
     public boolean captureFace = false;
     public boolean isLiveDetect = false;
-    public boolean uploadFace = true;
+    public boolean uploadFace = false;
     public String uploadAssress = "";
     public int faceMatchMode = 0;
 
