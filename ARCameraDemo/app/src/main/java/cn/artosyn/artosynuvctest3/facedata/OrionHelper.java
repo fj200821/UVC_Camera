@@ -3,9 +3,14 @@ package cn.artosyn.artosynuvctest3.facedata;
 import android.content.Context;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.artosyn.artosynuvctest3.activity.MainActivity;
 import cn.artosyn.aruvclib.ARUtil;
 import cn.artosyn.aruvclib.model.ARUserFace;
 import cn.readsense.faceserver.FaceServerManager;
@@ -20,6 +25,8 @@ public class OrionHelper {
 
     private static boolean bInit = false;
 
+    private WeakReference<MainActivity> mainActivityWeakReference;
+
     private static OrionHelper orionHelper = null;
     public static OrionHelper instance(){
         if(orionHelper==null){
@@ -30,6 +37,10 @@ public class OrionHelper {
 
     private OrionHelper(){
 
+    }
+
+    public void setContext(MainActivity context){
+        mainActivityWeakReference = new WeakReference<>(context);
     }
 
     public String init(Context context){
@@ -74,6 +85,12 @@ public class OrionHelper {
             List<RSFace> rsFaces = person.getRsFaces();
             if(rsFaces!=null&&rsFaces.size()>0){
                 user.imageUrl = rsFaces.get(0).getImageUrl();
+                if(!user.imageUrl.isEmpty()){
+                    try {
+                        Glide.with(mainActivityWeakReference.get()).download(user.imageUrl);
+                    }
+                    catch (Exception ignore){}
+                }
             }
             userFaces.add(user);
         }
@@ -112,6 +129,9 @@ public class OrionHelper {
         int iret = faceServerManager.sendRecoRecord(person,1,0,rsFace1.getFaceuuid(),"");
         //faceServerManager.sendGateState(1);
         Log.w(TAG,"sendRecRecord:"+iret);
+        if(iret!=0){
+            Log.e(TAG,"sendRecoRecord error "+faceServerManager.getErrorMsg(iret));
+        }
     }
 
     public void sendStrangeRecord(String sbitmap){

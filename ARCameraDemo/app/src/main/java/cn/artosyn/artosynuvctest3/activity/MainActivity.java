@@ -158,6 +158,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void init(){
+        OrionHelper.instance().setContext(this);
         toastMsg(OrionHelper.instance().init(this));
         registFromRemote = new RegistFromRemote(this);
         new InitTask(this).execute();

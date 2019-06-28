@@ -40,7 +40,7 @@ public class DataSync {
 
     private static final int HANDLE_DOLIVE = 0,HANDLE_CAPTURE = 1;
 
-    private final Queue<ARCommon.FrameData> frameDataCacheQueue = new ArrayBlockingQueue<ARCommon.FrameData>(20);
+    private final Queue<ARCommon.FrameData> frameDataCacheQueue = new ArrayBlockingQueue<ARCommon.FrameData>(25);
 
     public static final Map<Integer,ARUserFace> userFaces_ident = new LinkedHashMap<>();
     private static final Map<Integer,FaceLiveStatus> faceid_livestatus = new LinkedHashMap<>();
@@ -363,6 +363,9 @@ public class DataSync {
             framebuff = null;
             if(f!=null)
                 framebuff = Arrays.copyOf(f,f.length);
+            else{
+                Log.e(TAG,"frame data is null");
+            }
             singleFaceWithFeature = s;
             iHandleType = type;
             userFace = face;
@@ -512,11 +515,11 @@ public class DataSync {
                     rect_face.top = rect_face_ori.top * src.height() / faceCaptureOriData.singleFaceWithFeature.ori_h;
                     rect_face.bottom = rect_face_ori.bottom * src.height() / faceCaptureOriData.singleFaceWithFeature.ori_h;
                     //extend 1.6
-                    int rf_w = rect_face.width();
-                    int rf_h = rect_face.height();
-                    int rf_w_offset = ((int) (rf_w * 1.6) - rf_w) / 2;
-                    int rf_h_offset = ((int) (rf_h * 1.6) - rf_h) / 2;
-                    rect_face.inset(-rf_w_offset, -rf_h_offset);
+//                    int rf_w = rect_face.width();
+//                    int rf_h = rect_face.height();
+//                    int rf_w_offset = ((int) (rf_w * 1.6) - rf_w) / 2;
+//                    int rf_h_offset = ((int) (rf_h * 1.6) - rf_h) / 2;
+//                    rect_face.inset(-rf_w_offset, -rf_h_offset);
                     if (!src.contains(rect_face))
                         continue;
                     try {
@@ -540,8 +543,9 @@ public class DataSync {
                         }
                         if(DemoConfig.instance().isCloudMode){
                             String sbitmap = BitmapUtil.bitmapToBase64(bitmap_face);
-                            if(faceCaptureOriData.userFace!=null)
-                                OrionHelper.instance().sendRecRecord(faceCaptureOriData.userFace.person_uuid,faceCaptureOriData.userFace.face_uuid,sbitmap);
+                            if(faceCaptureOriData.userFace!=null) {
+                                OrionHelper.instance().sendRecRecord(faceCaptureOriData.userFace.person_uuid, faceCaptureOriData.userFace.face_uuid, sbitmap);
+                            }
                             else
                                 OrionHelper.instance().sendStrangeRecord(sbitmap);
                         }
@@ -549,6 +553,8 @@ public class DataSync {
                         Log.e("faceCaputreCallback", "error");
                         ex.printStackTrace();
                     }
+                    bitmap.recycle();
+                    faceCaptureOriData.framebuff = null;
                 }
             }
         }
@@ -570,6 +576,7 @@ public class DataSync {
                     ARUserFace userFace = iterator.next();
                     if(userFace.person_uuid.equals(rsFace.getPersonuuid())) {
                         userFace.face_uuid = rsFace.getFaceuuid();
+                        userFace.iSimilarity = (int)(rsFace.getConfidence());
                         return userFace;
                     }
                 }
