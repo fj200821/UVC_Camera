@@ -349,7 +349,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_weight="0"
                         android:gravity="right"
-                        android:text="云端模式" />
+                        android:text="云端模式(需重启)" />
 
                     <Switch
                         android:id="@+id/switch_cloudmode"

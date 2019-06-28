@@ -69,6 +69,8 @@ public class MainActivity extends BaseActivity {
     ImageView imageView_notifyAvatar;
     View notify_dialog;
 
+    boolean btemp;
+
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +152,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         cameraPreview.destory();
-        OrionHelper.instance().uninit();
+        if(DemoConfig.instance().isCloudMode)
+            OrionHelper.instance().uninit();
         unregisterReceiver(myBroadcastReceiver);
         super.onDestroy();
         finish();
@@ -159,8 +162,13 @@ public class MainActivity extends BaseActivity {
 
     public void init(){
         OrionHelper.instance().setContext(this);
-        toastMsg(OrionHelper.instance().init(this));
-        registFromRemote = new RegistFromRemote(this);
+        if(DemoConfig.instance().isCloudMode) {
+            toastMsg(OrionHelper.instance().init(this));
+
+        }
+        else {
+            registFromRemote = new RegistFromRemote(this);
+        }
         new InitTask(this).execute();
     }
 
@@ -223,10 +231,15 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.tool_camreg:
-                cameraPreview.registerFromCam();
-                onFaceRecordChange();
+                if(DemoConfig.instance().isCloudMode){
+                    toastMsg("云端模式无法注册");
+                }else {
+                    cameraPreview.registerFromCam();
+                    onFaceRecordChange();
+                }
                 break;
             case R.id.tool_config:
+                btemp = DemoConfig.instance().isCloudMode;
                 Intent intent1 = new Intent(MainActivity.this, ConfigActivity.class);
                 startActivityForResult(intent1,1);
                 break;
@@ -244,7 +257,8 @@ public class MainActivity extends BaseActivity {
         if (requestCode == 1) {
             setBottomPanelVisible();
             onFaceRecordChange();
-            new InitTask(this).execute();
+            if(btemp^DemoConfig.instance().isCloudMode)
+                new InitTask(this).execute();
         }
     }
 
