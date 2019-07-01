@@ -40,7 +40,7 @@ public class DataSync {
 
     private static final int HANDLE_DOLIVE = 0,HANDLE_CAPTURE = 1;
 
-    private final Queue<ARCommon.FrameData> frameDataCacheQueue = new ArrayBlockingQueue<ARCommon.FrameData>(25);
+    private final Queue<ARCommon.FrameData> frameDataCacheQueue = new ArrayBlockingQueue<ARCommon.FrameData>(20);
 
     public static final Map<Integer,ARUserFace> userFaces_ident = new LinkedHashMap<>();
     private static final Map<Integer,FaceLiveStatus> faceid_livestatus = new LinkedHashMap<>();
@@ -125,9 +125,7 @@ public class DataSync {
         ARCommon.FrameData frameData1 = frameDataCacheQueue.poll();
         if(frameData1!=null) {
             frameData1.buff = null;
-            if(frameData1.decode_img!=null&&!frameData1.decode_img.isRecycled()){
-                frameData1.decode_img.recycle();
-            }
+            ARUtil.safeReleaseBitmap(frameData1.decode_img);
         }
     }
 
@@ -447,11 +445,12 @@ public class DataSync {
                     continue;
                 if(faceCaptureOriData.iHandleType==HANDLE_DOLIVE) {
                     //活体检测
+                    int faceid = faceCaptureOriData.singleFaceWithFeature.boxFeatureData.face_id;
                     if (!bAlgoInit) {
                         faceCaptureOriData.framebuff = null;
+                        faceid_livestatus.remove(faceid);
                         continue;
                     }
-                    int faceid = faceCaptureOriData.singleFaceWithFeature.boxFeatureData.face_id;
                     int frameindex = faceCaptureOriData.singleFaceWithFeature.frameindex;
                     if (faceCaptureOriData.framebuff == null) {
                         faceid_livestatus.remove(faceid);
@@ -490,7 +489,7 @@ public class DataSync {
                     updateLiveFace(faceid, bLive);
                     //faceid_livestatus.remove(faceid);
 
-                    bitmap.recycle();
+                    ARUtil.safeReleaseBitmap(bitmap);
                     faceCaptureOriData.framebuff = null;
                 }
                 else{
@@ -549,11 +548,12 @@ public class DataSync {
                             else
                                 OrionHelper.instance().sendStrangeRecord(sbitmap);
                         }
+                        ARUtil.safeReleaseBitmap(bitmap_face);
                     } catch (Exception ex) {
                         Log.e("faceCaputreCallback", "error");
                         ex.printStackTrace();
                     }
-                    bitmap.recycle();
+                    ARUtil.safeReleaseBitmap(bitmap);
                     faceCaptureOriData.framebuff = null;
                 }
             }

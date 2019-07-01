@@ -50,7 +50,7 @@ public class FaceDataUtil {
         databaseHelper = new DatabaseHelper(c);
     }
 
-    public synchronized void updateUsers(){
+    public void updateUsers(){
         ArrayList<ARUserFace> userFaces;
         if(DemoConfig.instance().isCloudMode) {
             userFaces = OrionHelper.instance().getAllPerson();
@@ -64,11 +64,11 @@ public class FaceDataUtil {
         }
     }
 
-    public synchronized long insert(ARUserFace face){
+    public long insert(ARUserFace face){
         return databaseHelper.insert(face);
     }
 
-    public synchronized void deleteAll(){
+    public void deleteAll(){
         databaseHelper.deleteAllFaceData();
         for (int i = 0; i < userFaces_all.size(); i++) {
             String imgPath = DemoConfig.FacePicPath + userFaces_all.get(i).id + ".jpg";
@@ -80,7 +80,7 @@ public class FaceDataUtil {
         userFaces_all.clear();
     }
 
-    public synchronized void deleteByID(long id){
+    public void deleteByID(long id){
         databaseHelper.deleteFaceByID(id);
         String imgPath = DemoConfig.FacePicPath + id + ".jpg";
         File imgFile = new File(imgPath);

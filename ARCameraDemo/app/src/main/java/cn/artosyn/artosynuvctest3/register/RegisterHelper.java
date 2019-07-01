@@ -42,17 +42,21 @@ public class RegisterHelper {
 
     public void delete_alluser(){
         if(arAlgoSet.removeAllUser()){
-            FaceDataUtil.instance().deleteAll();
+            synchronized (FaceDataUtil.userFaces_all) {
+                FaceDataUtil.instance().deleteAll();
+            }
         }
     }
 
     public void delete_user(long id){
-        for(Iterator<ARUserFace> iterator = FaceDataUtil.userFaces_all.iterator(); iterator.hasNext();) {
-            ARUserFace userFace = iterator.next();
-            if(userFace.id==id){
-                arAlgoSet.removeUserByPersonId(userFace.rsid);
-                FaceDataUtil.instance().deleteByID(id);
-                iterator.remove();
+        synchronized (FaceDataUtil.userFaces_all) {
+            for (Iterator<ARUserFace> iterator = FaceDataUtil.userFaces_all.iterator(); iterator.hasNext(); ) {
+                ARUserFace userFace = iterator.next();
+                if (userFace.id == id) {
+                    arAlgoSet.removeUserByPersonId(userFace.rsid);
+                    FaceDataUtil.instance().deleteByID(id);
+                    iterator.remove();
+                }
             }
         }
     }

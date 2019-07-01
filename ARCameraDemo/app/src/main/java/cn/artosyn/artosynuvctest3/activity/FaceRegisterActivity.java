@@ -51,6 +51,7 @@ public class FaceRegisterActivity extends BaseActivity {
 
     public static WeakReference<Context> faceRedActivityCtxtWeakRef;
     RegedFaceRecyclerViewAdapter regedFaceRecyclerViewAdapter;
+    RecyclerView mRecyclerView_Reged;
 
     private Handler handler;
 
@@ -63,7 +64,6 @@ public class FaceRegisterActivity extends BaseActivity {
 
         registerHelper = new RegisterHelper(this);
 
-        RecyclerView mRecyclerView_Reged;
         mRecyclerView_Reged = findViewById(R.id.recyclerView_RegedFace);
         mRecyclerView_Reged.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         //mRecyclerView_Reged.setLayoutManager(new LinearLayoutManager(this));
@@ -113,6 +113,7 @@ public class FaceRegisterActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
+            activityWeakReference.get().setUserListEnable(false);
             activityWeakReference.get().updateInfoText("更新数据中...");
         }
 
@@ -120,11 +121,15 @@ public class FaceRegisterActivity extends BaseActivity {
         protected void onPostExecute(Void result) {
             activityWeakReference.get().updateInfoText("更新完成:"+FaceDataUtil.userFaces_all.size());
             activityWeakReference.get().regedFaceRecyclerViewAdapter.notifyDataSetChanged();
+            activityWeakReference.get().setUserListEnable(true);
         }
     }
 
     void updateInfoText(String info){
         textView_reged_info.setText(info);
+    }
+    void setUserListEnable(boolean enable){
+        mRecyclerView_Reged.setEnabled(enable);
     }
 
     private void runInBackground(Runnable runnable) {
@@ -264,6 +269,10 @@ public class FaceRegisterActivity extends BaseActivity {
                 imageButtonDel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(!mRecyclerView_Reged.isEnabled()){
+                            toastMsg("更新中无法删除");
+                            return;
+                        }
                         registerHelper.delete_user(id);
                         regedFaceRecyclerViewAdapter.notifyDataSetChanged();
                     }

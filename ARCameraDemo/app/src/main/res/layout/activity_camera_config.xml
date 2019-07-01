@@ -76,6 +76,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="auto"
             android:focusableInTouchMode="true"
             android:orientation="horizontal">
 
@@ -86,6 +87,8 @@
                 android:ems="10"
                 android:hint="send usb cmd"
                 android:inputType="text"
+                android:nextFocusLeft="@id/editText_ucmd"
+                android:nextFocusUp="@id/editText_ucmd"
                 android:singleLine="true" />
         </LinearLayout>
 

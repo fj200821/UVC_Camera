@@ -305,6 +305,11 @@ public class ARUtil {
         }
     }
 
+    public static void safeReleaseBitmap(Bitmap bitmap){
+        if(bitmap!=null&&!bitmap.isRecycled())
+            bitmap.recycle();
+    }
+
     public static String readFile2Str(File file){
         String sret = "";
         if(!file.exists()||!file.canRead()){
