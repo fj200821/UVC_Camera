@@ -82,9 +82,9 @@
 
                     <TextView
                         android:id="@+id/textView"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
                         android:text="人脸对比阈值" />
@@ -108,9 +108,9 @@
 
                     <TextView
                         android:id="@+id/textView_faceMatch_mode"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
                         android:text="人脸对比模式" />
@@ -134,9 +134,9 @@
 
                     <TextView
                         android:id="@+id/textView_livedetect"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
                         android:text="活体检测" />
@@ -178,9 +178,9 @@
 
                     <TextView
                         android:id="@+id/textView_dev_uuid"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
                         android:text="设备UUID" />
@@ -204,9 +204,9 @@
 
                     <TextView
                         android:id="@+id/textView_dev_position"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
                         android:text="设备位置" />
@@ -249,9 +249,9 @@
 
                     <TextView
                         android:id="@+id/textView_captureface"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
                         android:text="抓拍至文件" />
@@ -274,9 +274,9 @@
 
                     <TextView
                         android:id="@+id/textView_faceupload"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
                         android:text="抓拍至服务器" />
@@ -299,9 +299,9 @@
 
                     <TextView
                         android:id="@+id/textView_upload_addr"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
                         android:text="抓拍服务器地址" />
@@ -344,9 +344,9 @@
 
                     <TextView
                         android:id="@+id/textView_cloudmode"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
                         android:text="云端模式(需重启)" />
@@ -388,12 +388,12 @@
 
                     <TextView
                         android:id="@+id/textView_portrait"
-                        android:layout_width="100dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:gravity="right"
-                        android:text="竖屏模式" />
+                        android:text="竖屏模式(需重启)" />
 
                     <Switch
                         android:id="@+id/switch_portrait"
