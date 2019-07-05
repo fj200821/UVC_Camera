@@ -1,6 +1,5 @@
 package cn.artosyn.artosynuvctest3.view;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,53 +10,48 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.moons.serial.serialdemo.DoorLockManager;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import cn.artosyn.artosynuvctest3.activity.MainActivity;
-import cn.artosyn.artosynuvctest3.activity.base.BaseActivity;
-import cn.artosyn.artosynuvctest3.common.Common;
 import cn.artosyn.artosynuvctest3.config.DemoConfig;
 import cn.artosyn.artosynuvctest3.facedata.DataSync;
-import cn.artosyn.artosynuvctest3.facedata.FaceDataUtil;
 import cn.artosyn.artosynuvctest3.register.RegisterHelper;
 import cn.artosyn.artosynuvctest3.util.CustomDraw;
 import cn.artosyn.aruvclib.ARCameraManager;
 import cn.artosyn.aruvclib.ARCommon;
 import cn.artosyn.aruvclib.ARNativeHelper;
-import cn.artosyn.aruvclib.ARUtil;
 import cn.artosyn.aruvclib.model.ARUserFace;
-
+//摄像机预览类
 public class CameraPreview implements ARCameraManager.CameraDataCallback{
 
     private static final String TAG = CameraPreview.class.getSimpleName();
 
-    private SurfaceView overlayView;
-    private SurfaceView previewView;
+    private SurfaceView overlayView;   //基于SurfaceView
+    private SurfaceView previewView;   //预览SurfaceView
 
-    private boolean mSurfaceAvailable;
+    private boolean mSurfaceAvailable;   //surface是否可用
     private boolean mGLSurfaceAvailable;
-    private boolean bOpen;
-    private boolean bRegisterCam;
+    private boolean bOpen;   //摄像机打开标记
+    private boolean bRegisterCam;   //摄像机注册标记
 
-    private ARCameraManager arCameraManager;
-    private final ArrayBlockingQueue<ARCommon.FrameData> frameDataQueue;
-    private final ArrayBlockingQueue<ARCommon.CustomData> customDataQueue;
-    private final ArrayBlockingQueue<Bitmap> bitmapQueue;
+    private ARCameraManager arCameraManager;   //AR摄像机管理类
+    private final ArrayBlockingQueue<ARCommon.FrameData> frameDataQueue;   //帧数据队列
+    private final ArrayBlockingQueue<ARCommon.CustomData> customDataQueue;   //私有数据队列
+    private final ArrayBlockingQueue<Bitmap> bitmapQueue;   //bitmap队列
 
-    private DecodeThread decodeThread;
+    private DecodeThread decodeThread;   //解析图像的线程
     private DrawThread drawThread;
     private ViewThread viewThread;
 
@@ -67,7 +61,7 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
 
     private Handler handler;
 
-    private WeakReference<MainActivity> mainActivityWeakReference = null;
+    private WeakReference<MainActivity> mainActivityWeakReference = null;   // 定义弱引用变量,弱引用允许Activity被垃圾收集器清理
 
     private final Object mFrameCountLock;
     private int mNoFaceFrameCount = 0;
@@ -90,15 +84,15 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
         overlayView.setZOrderMediaOverlay(true);
         //previewView.setZOrderOnTop(true);
 
-        arCameraManager = new ARCameraManager();
-        arCameraManager.addCallback(this);
-        frameDataQueue = new ArrayBlockingQueue<ARCommon.FrameData>(2);
-        customDataQueue = new ArrayBlockingQueue<>(2);
-        bitmapQueue = new ArrayBlockingQueue<>(2);
+        arCameraManager = new ARCameraManager();   //实例化AR摄像机管理类
+        arCameraManager.addCallback(this);   //添加摄像机数据回调接口
+        frameDataQueue = new ArrayBlockingQueue<ARCommon.FrameData>(2);   //一个由数组结构组成的有界阻塞队列,图像帧数据
+        customDataQueue = new ArrayBlockingQueue<>(2);   //一个由数组结构组成的有界阻塞队列,私有数据
+        bitmapQueue = new ArrayBlockingQueue<>(2);   //一个由数组结构组成的有界阻塞队列,bitmap
 
-        bOpen = false;
-        bRegisterCam = false;
-
+        bOpen = false;   //打开标记
+        bRegisterCam = false;   //摄像机注册标记
+        //处理注册人脸和人脸识别的刷新
         handler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
@@ -151,18 +145,18 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
         Toast.makeText(mainActivityWeakReference.get(),"Auto Open "+ret,Toast.LENGTH_SHORT).show();
         return ret;
     }
-
+    //打开摄像机设备
     public int Open(String devname) {
         if (bOpen) {
-            Close();
+            Close();   //关闭摄像机
         }
         if (arCameraManager.Open(devname)) {
             bOpen = true;
-            mCaptureWidth = arCameraManager.GetCapWidth();
-            mCaptureHeight = arCameraManager.GetCapHeight();
+            mCaptureWidth = arCameraManager.GetCapWidth();   //捕获摄像的宽度
+            mCaptureHeight = arCameraManager.GetCapHeight();   //捕获摄像的高度
             dataSync.init(mCaptureWidth,mCaptureHeight,handler);
             if (arCameraManager.StartCapture()) {
-                decodeThread = new DecodeThread();
+                decodeThread = new DecodeThread();   //解析图像线程
                 drawThread = new DrawThread();
                 viewThread = new ViewThread();
                 viewThread.setDestRect(mPreviewWidth,mPreviewHeight);
@@ -216,7 +210,7 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
         }
         dataSync.addCacheFrame(frameData);
     }
-
+    //私有数据回调
     @Override
     public void onCustomDataRecv(ARCommon.CustomData customData) {
         if(!mSurfaceAvailable) return;
@@ -248,6 +242,7 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
         else{
             if(customData.boxFeatureDataList.size()==1){
                 if(customData.boxFeatureDataList.get(0).bHasFeature){
+                    DoorLockManager.getInstance().openLock();//开锁
                     dataSync.handleFeatureFace(customData);
                     return;
                 }
@@ -261,7 +256,7 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
             customDataQueue.offer(customData);
         }
     }
-
+    //SurfaceHolder.Callback
     private class SurfaceCallback implements SurfaceHolder.Callback {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
@@ -310,7 +305,7 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
             return -1;
         }
     }
-
+    //解析图像线程
     private class DecodeThread extends Thread{
         Boolean bRun;
 

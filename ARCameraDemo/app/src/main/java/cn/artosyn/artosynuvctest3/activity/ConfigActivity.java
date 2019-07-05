@@ -1,11 +1,11 @@
 package cn.artosyn.artosynuvctest3.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.moons.login.ResetpwdActivity;
 
 import cn.artosyn.artosynuvctest3.R;
 import cn.artosyn.artosynuvctest3.config.DemoConfig;
@@ -34,6 +35,7 @@ public class ConfigActivity extends AppCompatActivity {
     Switch switch_cloudmode;
 
     Spinner spinner_FaceMatchMode;
+    Button mButton_ModifyPassword;
 
     boolean cloudmode_tmp;
 
@@ -44,13 +46,13 @@ public class ConfigActivity extends AppCompatActivity {
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        editText_feature_threshold = ((EditText)findViewById(R.id.editText_feature_threshold));
+        editText_feature_threshold = ((EditText) findViewById(R.id.editText_feature_threshold));
         editText_feature_threshold.setText(Float.toString(DemoConfig.instance().feature_threshold));
 
-        editText_dev_uuid = ((EditText)findViewById(R.id.editText_dev_uuid));
+        editText_dev_uuid = ((EditText) findViewById(R.id.editText_dev_uuid));
         editText_dev_uuid.setText(DemoConfig.instance().dev_uuid);
 
-        editText_dev_position = ((EditText)findViewById(R.id.editText_dev_position));
+        editText_dev_position = ((EditText) findViewById(R.id.editText_dev_position));
         editText_dev_position.setText(DemoConfig.instance().dev_position);
 
         switch_portrait = findViewById(R.id.switch_portrait);
@@ -75,22 +77,23 @@ public class ConfigActivity extends AppCompatActivity {
         switch_cloudmode.setChecked(DemoConfig.instance().isCloudMode);
         cloudmode_tmp = DemoConfig.instance().isCloudMode;
 
-        ((TextView)findViewById(R.id.textView_ipaddr)).setText(ARUtil.getIPAddress(true));
-        ((TextView)findViewById(R.id.textView_macaddr)).setText(ARUtil.getMacAddr());
+        ((TextView) findViewById(R.id.textView_ipaddr)).setText(ARUtil.getIPAddress(true));
+        ((TextView) findViewById(R.id.textView_macaddr)).setText(ARUtil.getMacAddr());
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
-        if(width>height){
+        if (width > height) {
             switch_portrait.setEnabled(false);
-        }
-        else {
+        } else {
             switch_portrait.setEnabled(true);
         }
+        mButton_ModifyPassword=findViewById(R.id.modifyPassword_btn);
+        setEventListener();
     }
 
-//    @Override
+    //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        switch (item.getItemId()) {
 //            case android.R.id.home:
@@ -102,6 +105,15 @@ public class ConfigActivity extends AppCompatActivity {
 //                return super.onOptionsItemSelected(item);
 //        }
 //    }
+    private void setEventListener() {
+        mButton_ModifyPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ConfigActivity.this, ResetpwdActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
     public void onClick(View item) {
         switch (item.getId()) {
@@ -121,9 +133,9 @@ public class ConfigActivity extends AppCompatActivity {
                 DemoConfig.instance().uploadFace = switch_faceupload.isChecked();
                 DemoConfig.instance().isCloudMode = switch_cloudmode.isChecked();
                 DemoConfig.instance().save(this);
-                if(!DemoConfig.instance().isLiveDetect)
+                if (!DemoConfig.instance().isLiveDetect)
                     DataSync.clearLiveFaces();
-                if(cloudmode_tmp^DemoConfig.instance().isCloudMode){
+                if (cloudmode_tmp ^ DemoConfig.instance().isCloudMode) {
                     Glide.get(this).clearMemory();
                     new Thread(new Runnable() {
                         @Override
@@ -134,7 +146,7 @@ public class ConfigActivity extends AppCompatActivity {
                     DataSync.clearIdentFace();
                     FaceDataUtil.clearRecordUserFace();
                 }
-                Toast.makeText(this,"保存完成",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "保存完成", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

@@ -6,11 +6,34 @@ android {
     defaultConfig {
         applicationId "cn.artosyn.artosynuvctest3"
         minSdkVersion 17
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0.5"
+        targetSdkVersion 28
+        versionCode 110
+        versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    sourceSets {
+        main {
+            // 禁止自动使用ndk-build编译生成Android.mk文件
+            jni.srcDirs = []
+            // 指定so文件生成的路径
+            jniLibs.srcDirs = ['src/main/libs']
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def fileName
+            def date = new Date()
+            def formattedDate = date.format('yyyyMMdd')
+            if (variant.buildType.name.equals('release')) {
+                fileName = "${variant.mergedFlavor.versionName}_release_${formattedDate}.apk"
+            } else if (variant.buildType.name.equals('debug')) {
+                fileName = "${defaultConfig.applicationId}_V${defaultConfig.versionName}_${formattedDate}.apk"
+            }
+            outputFileName = fileName;
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -34,6 +57,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
-    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'//Rxjava的动态权限框架的依赖
     implementation project(':orion_base')
 }

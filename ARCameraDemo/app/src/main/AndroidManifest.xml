@@ -37,7 +37,15 @@
         <activity android:name=".activity.CameraConfigActivity"
             android:label="CameraConfig"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
-
+        <activity android:name="com.moons.login.LoginActivity"
+                  android:label="Login"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity android:name="com.moons.login.ResetpwdActivity"
+                  android:label="Login"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity android:name="com.moons.login.ExitActivity"
+                  android:label="Login"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <receiver android:name=".BootReceiver">
             <intent-filter >
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

@@ -382,6 +382,28 @@
                         android:layout_weight="0" />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/modifyPassword_btn"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0"
+                        android:gravity="right"
+                        android:text="修改用户密码" />
+
+                    <Switch
+                        android:layout_width="250dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
