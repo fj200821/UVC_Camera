@@ -10,9 +10,10 @@ import android.os.Message;
 import android.util.Log;
 import android.util.SparseIntArray;
 
+import com.moons.serial.serialdemo.DoorLockManager;
+
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -234,6 +235,7 @@ public class DataSync {
                 userFace = GetRegisteredInfo(boxFeatureData.feature);
                 if (userFace != null) {
                     //TODO:识别匹配成功
+                    DoorLockManager.getInstance().openLock();//开锁
                     userFace.bUpdate = true;
 
                     boxFeatureData.match_cosdis_max = userFace.iSimilarity;

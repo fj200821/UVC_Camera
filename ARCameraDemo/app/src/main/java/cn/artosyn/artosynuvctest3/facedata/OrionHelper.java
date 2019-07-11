@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class OrionHelper {
         faceServerManager.initDBManager(context);
         int code = faceServerManager.init("orion.readsense.cn",12002,feedCallback,
                 address,"1.0.5",
-                "859265ddb89c4aae","c2e34eb6b69d411d",RSConfig.DEVICE_TYPE_FLAT);
+                "bcfdfce7e2ec472a","5eb5b73582bc4bf6",RSConfig.DEVICE_TYPE_FLAT);
         String sret = "";
         if (code == 0) {
             sret = "Cloud init success";

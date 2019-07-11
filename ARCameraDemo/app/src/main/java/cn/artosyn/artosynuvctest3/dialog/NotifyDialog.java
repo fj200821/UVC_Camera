@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cn.artosyn.artosynuvctest3.R;
-
+//通知对话框类
 public class NotifyDialog extends DialogFragment {
 
     //private static NotifyDialog frag = null;

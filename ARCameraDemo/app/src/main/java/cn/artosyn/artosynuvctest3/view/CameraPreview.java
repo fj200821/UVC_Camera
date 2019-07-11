@@ -16,8 +16,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
-import com.moons.serial.serialdemo.DoorLockManager;
-
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -100,7 +98,8 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
                 if(what==0) {
                     Bitmap bitmap = (Bitmap) msg.obj;
                     registerHelper.init();
-                    registerHelper.register(bitmap, mainActivityWeakReference.get());
+//                    registerHelper.register(bitmap, mainActivityWeakReference.get());
+                    registerHelper.checkFaceAndPassword(bitmap, mainActivityWeakReference.get());
                 }
                 else if(what==1) {
                     mainActivityWeakReference.get().onFaceRecordChange();
@@ -139,7 +138,7 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
         int[] idevs = ARNativeHelper.getDevs();
         Log.i(TAG, "auto open first device"+Arrays.toString(ARNativeHelper.getDevs()));
         if(idevs.length>0) {
-            String devname = "/dev/video" + idevs[0];
+            String devname = "/dev/video" + idevs [0];
             ret =  Open(devname);
         }
         Toast.makeText(mainActivityWeakReference.get(),"Auto Open "+ret,Toast.LENGTH_SHORT).show();
@@ -242,7 +241,6 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
         else{
             if(customData.boxFeatureDataList.size()==1){
                 if(customData.boxFeatureDataList.get(0).bHasFeature){
-                    DoorLockManager.getInstance().openLock();//开锁
                     dataSync.handleFeatureFace(customData);
                     return;
                 }
@@ -351,7 +349,7 @@ public class CameraPreview implements ARCameraManager.CameraDataCallback{
                         if (bRegisterCam) {
                             Bitmap bitmap1 = bitmap.copy(bitmap.getConfig(), true);
                             handler.obtainMessage(0, bitmap1).sendToTarget();
-                            bRegisterCam = false;
+                            bRegisterCam = false;//把摄像机注册标记复位为false
                         }
                         //previewView.addFrame(bitmap);
                         viewThread.addBitmap(bitmap);

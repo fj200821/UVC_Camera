@@ -46,9 +46,14 @@
         <activity android:name="com.moons.login.ExitActivity"
                   android:label="Login"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
-        <receiver android:name=".BootReceiver">
-            <intent-filter >
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
 

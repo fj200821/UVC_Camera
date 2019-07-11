@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity {
         recyclerView.setAdapter(faceRecordAdapter);
 
         final RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        rxPermissions.request(Manifest.permission.RECEIVE_BOOT_COMPLETED,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.INTERNET, Manifest.permission.ACCESS_WIFI_STATE)
                 .subscribe(new Consumer<Boolean>() {
                     @Override
@@ -243,14 +243,14 @@ public class MainActivity extends BaseActivity {
                 devicesDialog.show();
                 break;
             case R.id.tool_camreg:
-//                if (DemoConfig.instance().isCloudMode) {
-//                    toastMsg("云端模式无法注册");
-//                } else {
-//                    cameraPreview.registerFromCam();
-//                    onFaceRecordChange();
-//                }
-                Intent intent2 = new Intent(MainActivity.this, LoginActivity.class);
-                startActivityForResult(intent2, REQUEST_CODE_IMAGEVIW_CAMREG);
+                if (DemoConfig.instance().isCloudMode) {
+                    toastMsg("云端模式无法注册");
+                } else {
+                    cameraPreview.registerFromCam();
+                    onFaceRecordChange();
+                }
+//                Intent intent2 = new Intent(MainActivity.this, LoginActivity.class);
+//                startActivityForResult(intent2, REQUEST_CODE_IMAGEVIW_CAMREG);
                 break;
             case R.id.tool_users:
 //                Intent intent = new Intent(MainActivity.this, FaceRegisterActivity.class);
@@ -339,7 +339,7 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
-
+    //显示通知对话框(人脸识别成功）
     public void showNotifyDialog(String name, String image) {
         textView_notifyName.setText(name);
         textView_notifyTime.setText(_sdfWatchDateTime.format(new Date()));
