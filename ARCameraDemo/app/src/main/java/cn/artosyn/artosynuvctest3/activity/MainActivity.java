@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.moons.login.ExitActivity;
 import com.moons.login.LoginActivity;
+import com.moons.util.FuncUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
@@ -157,6 +158,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         //init();
+        FuncUtil.hideNavigationBar(this);
     }
 
     @Override

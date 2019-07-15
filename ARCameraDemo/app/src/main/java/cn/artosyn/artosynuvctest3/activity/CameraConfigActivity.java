@@ -1,8 +1,8 @@
 package cn.artosyn.artosynuvctest3.activity;
 
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;

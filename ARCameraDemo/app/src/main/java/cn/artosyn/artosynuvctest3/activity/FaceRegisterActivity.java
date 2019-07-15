@@ -8,10 +8,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -81,7 +81,6 @@ public class FaceRegisterActivity extends BaseActivity {
         };
 
         textView_reged_info = findViewById(R.id.textView_reged_info);
-
     }
 
     @Override
